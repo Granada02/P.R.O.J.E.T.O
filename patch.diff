@@ -1,0 +1,233 @@
+*** Begin Patch
+*** Update File: bling_bot.py
+@@
+-    # C??digo JS do contador bonito com anima??uo
+-    contador_js = r"""
+-(function () {
+-  if (document.getElementById("contadorNotasContainer")) return;
+-
+-  // === Criar estilos para anima????es ===
+-  const style = document.createElement("style");
+-  style.innerHTML = 
+-    @keyframes slideDown {
+-      0% { transform: translateY(-50px); opacity: 0; }
+-      100% { transform: translateY(0); opacity: 1; }
+-    }
+-    @keyframes pulse {
+-      0% { transform: scale(1); }
+-      50% { transform: scale(1.1); }
+-      100% { transform: scale(1); }
+-    }
+-  ;
+-  document.head.appendChild(style);
+-
+-  // === Criar container central para os cards ===
+-  let container = document.createElement("div");
+-  container.id = "contadorNotasContainer";
+-  Object.assign(container.style, {
+-    position: "fixed",
+-    top: "60px",
+-    left: "50%",
+-    transform: "translateX(-50%)",
+-    display: "flex",
+-    gap: "20px",
+-    zIndex: 99999,
+-    animation: "slideDown 0.6s ease-out",
+-  });
+-  document.body.appendChild(container);
+-
+-  // === Fun??uo para criar um card bonito ===
+-  function criarCard(id, gradiente, texto) {
+-    const div = document.createElement("div");
+-    div.id = id;
+-    Object.assign(div.style, {
+-      minWidth: "160px",
+-      padding: "12px 24px",
+-      borderRadius: "20px",
+-      background: gradiente,
+-      color: "white",
+-      fontSize: "18px",
+-      fontWeight: "600",
+-      fontFamily: "system-ui, sans-serif",
+-      textAlign: "center",
+-      backdropFilter: "blur(10px)",
+-      WebkitBackdropFilter: "blur(10px)",
+-      boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
+-      transition: "all 0.3s ease-in-out",
+-      animation: "slideDown 0.8s ease-out",
+-    });
+-    div.innerText = texto;
+-    container.appendChild(div);
+-    return div;
+-  }
+-
+-  // === Checkout (azul) ===
+-  const div1 = criarCard(
+-    "contadorNotasDiv",
+-    "linear-gradient(135deg, #2196F3, #21CBF3)",
+-    "Checkout: 0"
+-  );
+-
+-  // === Hoje (laranja) ===
+-  const div2 = criarCard(
+-    "contadorNotasFeitasDiv",
+-    "linear-gradient(135deg, #FF9800, #F57C00)",
+-    "Hoje: 0"
+-  );
+-
+-  // ==== Reset diorio ====
+-  function resetIfNeeded() {
+-    const hoje = new Date().toISOString().split("T")[0];
+-    const ultimaData = localStorage.getItem("notasData");
+-    if (ultimaData !== hoje) {
+-      localStorage.setItem("notasData", hoje);
+-      localStorage.setItem("notasFeitas", 0);
+-    }
+-  }
+-
+-  resetIfNeeded();
+-  let notasFeitas = parseInt(localStorage.getItem("notasFeitas") || "0");
+-  div2.innerText = "Hoje: " + notasFeitas;
+-
+-  // ==== Atualiza checkout ====
+-  function atualizarContadorCheckout() {
+-    const notas = document.querySelectorAll("ul li[data-v-731ca16e]");
+-    const total = notas.length;
+-    div1.innerText = "Checkout: " + total;
+-
+-    if (total === 0) {
+-      div1.style.background = "linear-gradient(135deg, #E53935, #B71C1C)";
+-      div1.style.boxShadow = "0 6px 20px rgba(229, 57, 53, 0.4)";
+-    } else {
+-      div1.style.background = "linear-gradient(135deg, #2196F3, #21CBF3)";
+-      div1.style.boxShadow = "0 6px 20px rgba(33, 150, 243, 0.4)";
+-    }
+-    return total;
+-  }
+-
+-  // ==== Atualiza o "Feitas no Dia" ====
+-  function registrarNotasFeitas(qtd) {
+-    resetIfNeeded();
+-    notasFeitas = parseInt(localStorage.getItem("notasFeitas") || "0") + qtd;
+-    localStorage.setItem("notasFeitas", notasFeitas);
+-    div2.innerText = "Hoje: " + notasFeitas;
+-
+-    // Anima??uo pulse
+-    div2.style.animation = "pulse 0.4s ease-out";
+-    setTimeout(() => div2.style.animation = "", 400);
+-  }
+-
+-  // Monitorar mudan??as
+-  let ultimoTotal = atualizarContadorCheckout();
+-  setInterval(() => {
+-    const total = atualizarContadorCheckout();
+-    if (total < ultimoTotal) {
+-      const diferenca = ultimoTotal - total;
+-      registrarNotasFeitas(diferenca);
+-    }
+-    ultimoTotal = total;
+-  }, 3000);
+-})();
+-"""
++    # Código JS revisado: cards alinhados, tipografia profissional e animações sutis
++    contador_js = r"""
++(function () {
++  if (document.getElementById('blingCounters')) return;
++
++  // ===== Styles (tipografia e alinhamento profissional)
++  const style = document.createElement('style');
++  style.id = 'blingCountersStyle';
++  style.textContent = 
++    @keyframes slideDown { 0% { transform: translateY(-12px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
++    @keyframes pulse { 0% { transform: scale(1) } 50% { transform: scale(1.06) } 100% { transform: scale(1) } }
++
++    .bling-counters { position: fixed; top: 56px; left: 50%; transform: translateX(-50%); display: flex; gap: 16px; z-index: 2147483647; pointer-events: none; animation: slideDown .35s ease-out; }
++    .bling-card { pointer-events: none; min-width: 200px; height: 92px; padding: 12px 18px; border-radius: 14px; color: #fff; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,.22); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.18) }
++    .bling-card--ok { background: linear-gradient(135deg, #2196F3, #21CBF3) }
++    .bling-card--alert { background: linear-gradient(135deg, #E53935, #B71C1C) }
++    .bling-card--today { background: linear-gradient(135deg, #FF9800, #F57C00) }
++    .bling-label { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; opacity: .85; line-height: 1; margin-bottom: 6px }
++    .bling-value { font-size: 34px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased }
++    .bling-pulse { animation: pulse .35s ease-out }
++  ;
++  document.head.appendChild(style);
++
++  // ===== Container
++  const container = document.createElement('div');
++  container.id = 'blingCounters';
++  container.className = 'bling-counters';
++  document.body.appendChild(container);
++
++  // ===== Card factory (label + number)
++  function createCard({ id, label, theme }) {
++    const card = document.createElement('div');
++    card.id = id;
++    card.className = ling-card ;
++
++    const lbl = document.createElement('div');
++    lbl.className = 'bling-label';
++    lbl.textContent = label;
++
++    const val = document.createElement('div');
++    val.className = 'bling-value';
++    val.setAttribute('aria-live', 'polite');
++    val.textContent = '0';
++
++    card.appendChild(lbl);
++    card.appendChild(val);
++    container.appendChild(card);
++    return { card, val };
++  }
++
++  // ===== Cards
++  const checkout = createCard({ id: 'blingCheckout', label: 'Checkout', theme: 'bling-card--ok' });
++  const today = createCard({ id: 'blingToday', label: 'Hoje', theme: 'bling-card--today' });
++
++  // ===== Storage: reset diário
++  function resetIfNeeded() {
++    const hoje = new Date().toISOString().split('T')[0];
++    const ultima = localStorage.getItem('notasData');
++    if (ultima !== hoje) {
++      localStorage.setItem('notasData', hoje);
++      localStorage.setItem('notasFeitas', '0');
++    }
++  }
++  resetIfNeeded();
++  let notasFeitas = parseInt(localStorage.getItem('notasFeitas') || '0', 10);
++  today.val.textContent = String(notasFeitas);
++
++  // ===== Atualiza checkout (alterna cor quando vazio)
++  function updateCheckout() {
++    const itens = document.querySelectorAll('ul li[data-v-731ca16e]');
++    const total = itens.length;
++    checkout.val.textContent = String(total);
++    checkout.card.classList.toggle('bling-card--alert', total === 0);
++    checkout.card.classList.toggle('bling-card--ok', total !== 0);
++    return total;
++  }
++
++  // ===== Incrementa "Hoje"
++  function addFeitas(qtd) {
++    resetIfNeeded();
++    notasFeitas = parseInt(localStorage.getItem('notasFeitas') || '0', 10) + qtd;
++    localStorage.setItem('notasFeitas', String(notasFeitas));
++    today.val.textContent = String(notasFeitas);
++    today.card.classList.remove('bling-pulse');
++    // reflow para reiniciar animação
++    void today.card.offsetWidth;
++    today.card.classList.add('bling-pulse');
++    setTimeout(() => today.card.classList.remove('bling-pulse'), 350);
++  }
++
++  // ===== Loop de monitoramento
++  let ultimoTotal = updateCheckout();
++  setInterval(() => {
++    const total = updateCheckout();
++    if (total < ultimoTotal) {
++      addFeitas(ultimoTotal - total);
++    }
++    ultimoTotal = total;
++  }, 3000);
++})();
++"""
+*** End Patch
